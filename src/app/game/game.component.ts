@@ -21,7 +21,7 @@ export class GameComponent implements OnInit{
     this.newGame();
     this
       .firestore
-      .collection('games')
+      .collection('Test')
       .valueChanges()
       .subscribe((game) => {
         console.log("Game update", game)

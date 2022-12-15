@@ -1,5 +1,14 @@
 {
+  "targets": {
+    "project-ring-of-fire": {
+      "hosting": {
+        "ringoffire": [
+          "project-ring-of-fire"
+        ]
+      }
+    }
+  },
   "projects": {
-    "default": "ringoffirelgx12"
+    "default": "project-ring-of-fire"
   }
 }
