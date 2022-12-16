@@ -3,6 +3,7 @@ import { Game } from 'src/models/game';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -15,22 +16,28 @@ export class GameComponent implements OnInit{
   currentCard: string = '';
   game: Game;
 
-  constructor(private firestore: AngularFirestore, public dialog: MatDialog) {}
+  constructor(private firestore: AngularFirestore, public dialog: MatDialog, private route: ActivatedRoute) {}
 
   ngOnInit():void {
     this.newGame();
-    this
-      .firestore
-      .collection('Test')
-      .valueChanges()
-      .subscribe((game) => {
-        console.log("Game update", game)
-      })
+    this.route.params.subscribe((params) => {
+      console.log(params.id);
+      this
+        .firestore
+        .collection('Game')
+        .doc(params.id)
+        .valueChanges()
+        .subscribe((game) => {
+          console.log("Game update", game)
+        })
+    })
   }
 
   newGame() {
     this.game = new Game();
-    console.log(this.game)
+    // this.firestore
+    //   .collection('Game')
+    //   .add(this.game.toJson())
   }
 
   takeCard() {
