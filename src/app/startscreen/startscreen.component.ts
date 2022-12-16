@@ -18,12 +18,11 @@ export class StartscreenComponent implements OnInit{
 
   async newGame() {
     let game = new Game();
-    this.router.navigateByUrl('game');
     const coll = collection(this.firestore, 'Game');
     console.log("Document written with ID: ", coll);
     // CRUD = Create => addDoc, Read, Update => setDoc, Delete
     let gameInfo = await addDoc(coll, {game: game.toJson()});
-    console.log(gameInfo);
+    this.router.navigateByUrl('game/' + gameInfo.id);
   }
 }
 
