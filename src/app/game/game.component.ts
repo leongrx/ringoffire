@@ -17,33 +17,35 @@ export class GameComponent implements OnInit{
 
   constructor(private firestore: AngularFirestore, public dialog: MatDialog, private route: ActivatedRoute) {}
 
-  ngOnInit():void {
+  ngOnInit(): void{
     this.newGame();
     this.route.params.subscribe((params) => {
-      console.log(params.id);
-      this.gameId = params.id;
-      this
-        .firestore
-        .collection('Game')
-        .doc(this.gameId)
-        .valueChanges()
-        .subscribe((game: any) => {
-          console.log("Game update", game);
-          this.game.players = game.players,
-          this.game.stack = game.stack,
-          this.game.playedCards = game.playedCards,
-          this.game.currentPlayer = game.currentPlayer,
-          this.game.pickCardAnimation = game.pickCardAnimation,
-          this.game.currentCard = game.currentCard
-        })
-    })
-  }
+    console.log(params.id);
+    this.gameId = params.id;
 
+    this
+      .firestore
+      .collection('Game')
+      .doc(this.gameId)
+      .valueChanges()
+      .subscribe((game: any) => {
+        this.game.players = game.players,
+        this.game.stack = game.stack,
+        this.game.playedCards = game.playedCards,
+        this.game.currentPlayer = game.currentPlayer,
+        this.game.pickCardAnimation = game.pickCardAnimation,
+        this.game.currentCard = game.currentCard
+      })
+    })
+    debugger
+  }
+  
   newGame() {
     this.game = new Game();
   }
-
+  
   takeCard() {
+    console.log("Game update", this.game.players);  
     if(!this.game.pickCardAnimation) {
       this.game.currentCard = this.game.stack.pop();
       this.saveGame();
