@@ -20,7 +20,6 @@ export class GameComponent implements OnInit{
   ngOnInit(): void{
     this.newGame();
     this.route.params.subscribe((params) => {
-    console.log(params);
     this.gameId = params.id;
     
     this
@@ -28,14 +27,13 @@ export class GameComponent implements OnInit{
       .collection('Game')
       .doc(this.gameId)
       .valueChanges()
-      .subscribe((game: any) => {
-        this.game.players = game.players,
-        this.game.stack = game.stack,
-        this.game.playedCards = game.playedCards,
-        this.game.currentPlayer = game.currentPlayer,
-        this.game.pickCardAnimation = game.pickCardAnimation,
-        this.game.currentCard = game.currentCard
-        console.log('Game', this.gameId)
+      .subscribe((currentGame: any) => {
+        this.game.players = currentGame.game.players,
+        this.game.stack = currentGame.game.stack,
+        this.game.playedCards = currentGame.game.playedCards,
+        this.game.currentPlayer = currentGame.game.currentPlayer,
+        this.game.pickCardAnimation = currentGame.game.pickCardAnimation,
+        this.game.currentCard = currentGame.game.currentCard
       })
     })
   }
@@ -47,17 +45,19 @@ export class GameComponent implements OnInit{
   takeCard() {
     if(!this.game.pickCardAnimation) {
       this.game.currentCard = this.game.stack.pop();
+      console.log(this.game.currentCard)
+      this.saveGame();
       this.game.pickCardAnimation = true;
       
       this.game.currentPlayer++;
       this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
-      this.saveGame();
       
       setTimeout(() => {
         this.game.playedCards.push(this.game.currentCard);
-        this.saveGame();
         this.game.pickCardAnimation = false;
+        this.saveGame();
       }, 1000)
+      console.log(this.game.stack)
     }
   }
 

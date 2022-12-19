@@ -13,7 +13,6 @@ export class Game {
             this.stack.push('diamonds_' + i);
             this.stack.push('hearts_' + i);
         }
-
         shuffle(this.stack)
     }
 
