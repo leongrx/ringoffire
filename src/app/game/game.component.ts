@@ -14,6 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 export class GameComponent implements OnInit{
   game: Game;
   gameId: string;
+  firstCardOnInit: string;
 
   constructor(private firestore: AngularFirestore, public dialog: MatDialog, private route: ActivatedRoute) {}
 
@@ -36,44 +37,47 @@ export class GameComponent implements OnInit{
         this.game.currentCard = currentGame.game.currentCard
       })
     })
+    this.game.currentCard = this.game.stack.slice(-1).toString();
+    console.log('Gameeeee', this.game)
+    console.log('CurrentCard', this.game.currentCard)
+    debugger
   }
   
   newGame() {
     this.game = new Game();
   }
   
-  takeCard() {
+  async takeCard() {
     if(!this.game.pickCardAnimation) {
       this.game.currentCard = this.game.stack.pop();
-      console.log(this.game.currentCard)
-      this.saveGame();
       this.game.pickCardAnimation = true;
+      await this.saveGame();
       
       this.game.currentPlayer++;
       this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
       
-      setTimeout(() => {
+      setTimeout(async () => {
         this.game.playedCards.push(this.game.currentCard);
         this.game.pickCardAnimation = false;
-        this.saveGame();
+        await this.saveGame();
       }, 1000)
-      console.log(this.game.stack)
     }
   }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogAddPlayerComponent);
 
-    dialogRef.afterClosed().subscribe((name: string) => {
+    dialogRef.afterClosed().subscribe(async (name: string) => {
       if(name && name.length > 0) {
         this.game.players.push(name);
-        this.saveGame();
+        await this.saveGame();
       }
     });
   }
 
-  saveGame() {
-    this
+  async saveGame() {
+     await 
+     this
       .firestore
       .collection('Game')
       .doc(this.gameId)
