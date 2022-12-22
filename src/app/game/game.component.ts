@@ -20,55 +20,43 @@ export class GameComponent implements OnInit{
 
    ngOnInit(): void{
     this.newGame();
-    this.routeSubscribe();
-  }
-
-
-  routeSubscribe() {
     this.route.params.subscribe(async (params) => {
       this.gameId = params.id;
-      this.subscribeValueChanges();
+      this
+        .firestore
+        .collection('Games')
+        .doc(this.gameId)
+        .valueChanges()
+        .subscribe((currentGame: any) => {
+          this.game.players = currentGame.players,
+          this.game.stack = currentGame.stack,
+          this.game.playedCards = currentGame.playedCards,
+          this.game.currentPlayer = currentGame.currentPlayer,
+          this.game.pickCardAnimation = currentGame.pickCardAnimation,
+          this.game.currentCard = currentGame.currentCard
+        })
     })
   }
 
-  subscribeValueChanges() {
-    this
-      .firestore
-      .collection('Game')
-      .doc(this.gameId)
-      .valueChanges()
-      .subscribe((currentGame: any) => {
-        this.game.players = currentGame.game.players,
-        this.game.stack = currentGame.game.stack,
-        this.game.playedCards = currentGame.game.playedCards,
-        this.game.currentPlayer = currentGame.game.currentPlayer,
-        this.game.pickCardAnimation = currentGame.game.pickCardAnimation,
-        this.game.currentCard = currentGame.game.currentCard
-      })
-  }
-  
   newGame() {
     this.game = new Game();
   }
   
   takeCard() {
+    console.log(this.game)
     if(!this.game.pickCardAnimation) {
       this.game.currentCard = this.game.stack.pop();
       this.game.pickCardAnimation = true;
       this.saveGame();
-      debugger
-      
       this.game.currentPlayer++;
       this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
-      debugger
-      
       setTimeout(() => {
         this.game.playedCards.push(this.game.currentCard);
-        debugger
         this.game.pickCardAnimation = false;
         this.saveGame();
       }, 1000)
     }
+    console.log(this.game.stack)
   }
 
   openDialog(): void {
@@ -85,10 +73,9 @@ export class GameComponent implements OnInit{
   saveGame() {
     this
      .firestore
-     .collection('Game')
+     .collection('Games')
      .doc(this.gameId)
      .update(this.game.toJson());
-     console.log(this.game.toJson().currentCard)
   }
 }
 

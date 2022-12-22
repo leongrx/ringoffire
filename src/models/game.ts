@@ -28,8 +28,8 @@ export class Game {
     }
 }
 
-function shuffle(stack: any[]) {
-    let currentIndex = stack.length,  randomIndex;
+function shuffle(array) {
+    let currentIndex = array.length,  randomIndex;
   
     // While there remain elements to shuffle.
     while (currentIndex != 0) {
@@ -39,9 +39,9 @@ function shuffle(stack: any[]) {
       currentIndex--;
   
       // And swap it with the current element.
-      [stack[currentIndex], stack[randomIndex]] = [
-        stack[randomIndex], stack[currentIndex]];
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
     }
   
-    return stack;
+    return array;
   }

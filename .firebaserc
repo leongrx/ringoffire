@@ -1,4 +1,8 @@
 {
+  "projects": {
+    "default": "project-ring-of-fire",
+    "staging": "project-ring-of-fire"
+  },
   "targets": {
     "project-ring-of-fire": {
       "hosting": {
@@ -8,7 +12,5 @@
       }
     }
   },
-  "projects": {
-    "default": "project-ring-of-fire"
-  }
+  "etags": {}
 }
