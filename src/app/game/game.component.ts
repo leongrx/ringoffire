@@ -18,17 +18,29 @@ export class GameComponent implements OnInit{
 
   constructor(private firestore: AngularFirestore, public dialog: MatDialog, private route: ActivatedRoute) {}
 
-  ngOnInit(): void{
+  async ngOnInit(): Promise<void>{
     this.newGame();
-    this.route.params.subscribe((params) => {
-    this.gameId = params.id;
-    
+    await this.routeSubscribe();
+    this.game.currentCard = this.game.stack.slice(-1).toString();
+    console.log('Gameeeee', this.game)
+    console.log('CurrentCard', this.game.currentCard)
+  }
+
+
+  async routeSubscribe() {
+    this.route.params.subscribe(async (params) => {
+      this.gameId = params.id;
+      await this.subscribeValueChanges();
+    })
+  }
+
+  async subscribeValueChanges() {
     this
       .firestore
       .collection('Game')
       .doc(this.gameId)
       .valueChanges()
-      .subscribe((currentGame: any) => {
+      .subscribe(async (currentGame: any) => {
         this.game.players = currentGame.game.players,
         this.game.stack = currentGame.game.stack,
         this.game.playedCards = currentGame.game.playedCards,
@@ -36,11 +48,6 @@ export class GameComponent implements OnInit{
         this.game.pickCardAnimation = currentGame.game.pickCardAnimation,
         this.game.currentCard = currentGame.game.currentCard
       })
-    })
-    this.game.currentCard = this.game.stack.slice(-1).toString();
-    console.log('Gameeeee', this.game)
-    console.log('CurrentCard', this.game.currentCard)
-    debugger
   }
   
   newGame() {
