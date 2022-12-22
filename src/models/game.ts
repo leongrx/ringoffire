@@ -25,11 +25,10 @@ export class Game {
             pickCardAnimation: this.pickCardAnimation,
             currentCard: this.currentCard
         }
-
     }
 }
 
-function shuffle(stack) {
+function shuffle(stack: any[]) {
     let currentIndex = stack.length,  randomIndex;
   
     // While there remain elements to shuffle.

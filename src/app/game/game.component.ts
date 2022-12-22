@@ -18,29 +18,26 @@ export class GameComponent implements OnInit{
 
   constructor(private firestore: AngularFirestore, public dialog: MatDialog, private route: ActivatedRoute) {}
 
-  async ngOnInit(): Promise<void>{
+   ngOnInit(): void{
     this.newGame();
-    await this.routeSubscribe();
-    this.game.currentCard = this.game.stack.slice(-1).toString();
-    console.log('Gameeeee', this.game)
-    console.log('CurrentCard', this.game.currentCard)
+    this.routeSubscribe();
   }
 
 
-  async routeSubscribe() {
+  routeSubscribe() {
     this.route.params.subscribe(async (params) => {
       this.gameId = params.id;
-      await this.subscribeValueChanges();
+      this.subscribeValueChanges();
     })
   }
 
-  async subscribeValueChanges() {
+  subscribeValueChanges() {
     this
       .firestore
       .collection('Game')
       .doc(this.gameId)
       .valueChanges()
-      .subscribe(async (currentGame: any) => {
+      .subscribe((currentGame: any) => {
         this.game.players = currentGame.game.players,
         this.game.stack = currentGame.game.stack,
         this.game.playedCards = currentGame.game.playedCards,
@@ -54,19 +51,22 @@ export class GameComponent implements OnInit{
     this.game = new Game();
   }
   
-  async takeCard() {
+  takeCard() {
     if(!this.game.pickCardAnimation) {
       this.game.currentCard = this.game.stack.pop();
       this.game.pickCardAnimation = true;
-      await this.saveGame();
+      this.saveGame();
+      debugger
       
       this.game.currentPlayer++;
       this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
+      debugger
       
-      setTimeout(async () => {
+      setTimeout(() => {
         this.game.playedCards.push(this.game.currentCard);
+        debugger
         this.game.pickCardAnimation = false;
-        await this.saveGame();
+        this.saveGame();
       }, 1000)
     }
   }
@@ -74,21 +74,21 @@ export class GameComponent implements OnInit{
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogAddPlayerComponent);
 
-    dialogRef.afterClosed().subscribe(async (name: string) => {
+    dialogRef.afterClosed().subscribe((name: string) => {
       if(name && name.length > 0) {
         this.game.players.push(name);
-        await this.saveGame();
+        this.saveGame();
       }
     });
   }
 
-  async saveGame() {
-     await 
-     this
-      .firestore
-      .collection('Game')
-      .doc(this.gameId)
-      .update(this.game.toJson());
+  saveGame() {
+    this
+     .firestore
+     .collection('Game')
+     .doc(this.gameId)
+     .update(this.game.toJson());
+     console.log(this.game.toJson().currentCard)
   }
 }
 
