@@ -1,16 +1,5 @@
 {
   "projects": {
-    "default": "project-ring-of-fire",
-    "staging": "project-ring-of-fire"
-  },
-  "targets": {
-    "project-ring-of-fire": {
-      "hosting": {
-        "ringoffire": [
-          "project-ring-of-fire"
-        ]
-      }
-    }
-  },
-  "etags": {}
+    "default": "project-ring-of-fire"
+  }
 }
